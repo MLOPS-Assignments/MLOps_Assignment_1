@@ -168,7 +168,17 @@
             .then((data) => {
               console.log("Success:", data);
               // Display the Results in the 'Results' input field
-              document.getElementById("Results").value = data.predicted_outcome; // Assuming the API returns an object with a 'Results' property
+              if (data.predicted_outcome == "Loss") {
+                document.getElementById("Results").style.color = "red";
+                document.getElementById("Results").style.fontWeight = "bold";
+                document.getElementById("Results").style.borderColor = "red";
+                document.getElementById("Results").value = "You will lose!";
+              } else {
+                document.getElementById("Results").style.color = "green";
+                document.getElementById("Results").style.fontWeight = "bold";
+                document.getElementById("Results").style.borderColor = "green";
+                document.getElementById("Results").value = "You will win!";
+              }
             })
             .catch((error) => {
               console.error("Error:", error);
