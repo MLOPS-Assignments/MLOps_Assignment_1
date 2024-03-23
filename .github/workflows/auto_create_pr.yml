@@ -1,0 +1,25 @@
+name: Auto Create Pull Request
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Auto-create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Auto-merge dev into test"
+          title: "Merge dev into test"
+          body: |
+            This is an auto-generated PR to merge changes from `dev` into `test`.
+          branch: "auto-merge-dev-to-test-${{ github.run_number }}"
+          base: "test"
+          delete-branch: true
