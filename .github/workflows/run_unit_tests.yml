@@ -1,4 +1,4 @@
-name: Run Unit Tests
+name: Run Unit Tests and Merge to Main
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - test
 
 jobs:
-  unit-tests:
+  unit-tests-and-merge:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -24,4 +24,30 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest tests
+          pytest tests.py
+
+      - name: Setup Git for PR and Merge
+        if: success() # This ensures the step runs only if previous steps succeed
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+
+      - name: Create Pull Request to main
+        if: success() # Continues only if tests pass
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "main"
+          source_branch: "test"
+          pr_title: "Automated PR to merge test into main"
+          pr_body: "This is an automated pull request to merge changes from test into main after tests passed."
+          pr_label: "automerge"
+          github_token: ${{ secrets.MY_PULL_REQ_TOKEN }}
+
+      - name: Auto-merge PR
+        if: success()
+        uses: pascalgn/automerge-action@v0.14.2
+        with:
+          mergeMethod: merge
+          token: ${{ secrets.MY_PULL_REQ_TOKEN }}
+          pullRequest: "find:*automated PR to merge test into main*"
+          # Note: Adjust the pullRequest filter as needed to match your PR title or conditions.
