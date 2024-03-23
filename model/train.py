@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from joblib import dump
 
 # Load your data
-df = pd.read_csv('Merged_File.csv')
+df = pd.read_csv('data\Merged_File.csv')
 
 # Replace '-' with NaN for numerical columns and 'None' for categorical
 df['Task Completed'] = pd.to_numeric(df['Task Completed'], errors='coerce')
