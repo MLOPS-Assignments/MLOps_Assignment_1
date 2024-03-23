@@ -15,7 +15,7 @@ jobs:
       - name: Auto-create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_PULL_REQ_TOKEN }}
           commit-message: "Auto-merge dev into test"
           title: "Merge dev into test"
           body: |
