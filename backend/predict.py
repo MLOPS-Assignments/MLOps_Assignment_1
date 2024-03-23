@@ -25,9 +25,9 @@ def predict():
     input_data = request.get_json()
     X_new = pd.DataFrame([input_data])
 
-    X_new['Task Completed'] = pd.to_numeric(X_new['Task Completed'], 
+    X_new['Task Completed'] = pd.to_numeric(X_new['Task Completed'],
                                             errors='coerce')
-    X_new['Imposter Kills'] = pd.to_numeric(X_new['Imposter Kills'], 
+    X_new['Imposter Kills'] = pd.to_numeric(X_new['Imposter Kills'],
                                             errors='coerce')
 
     def process_game_length(gl):
