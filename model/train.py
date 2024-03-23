@@ -6,12 +6,20 @@ from sklearn.preprocessing import LabelEncoder
 from joblib import dump
 
 # Load your data
-df = pd.read_csv('data\Merged_File.csv')
+df = pd.read_csv(r'data\Merged_File.csv')  # Raw string for Windows path
 
 # Replace '-' with NaN for numerical columns and 'None' for categorical
 df['Task Completed'] = pd.to_numeric(df['Task Completed'], errors='coerce')
 df['Imposter Kills'] = pd.to_numeric(df['Imposter Kills'], errors='coerce')
-df['Game Length'] = df['Game Length'].apply(lambda x: int(x.split('m')[0]) * 60 + int(x.split(' ')[1].split('s')[0]) if isinstance(x, str) and 'm' in x else None)
+
+# Refactor game length conversion to handle long line
+def convert_game_length(x):
+    if isinstance(x, str) and 'm' in x:
+        minutes, seconds = x.replace('s', '').split('m')
+        return int(minutes) * 60 + int(seconds)
+    return None
+
+df['Game Length'] = df['Game Length'].apply(convert_game_length)
 df.replace({'-': None, 'No': 0, 'Yes': 1}, inplace=True)
 
 # Label encode categorical columns. Now 'Team' is included as a feature, not a target.
@@ -36,7 +44,8 @@ df[features] = df[features].fillna(0)
 target = 'Outcome'
 
 # Split the dataset
-X_train, X_test, y_train, y_test = train_test_split(df[features], df[target], test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    df[features], df[target], test_size=0.2, random_state=42)
 
 # Initialize and train the classifier
 random_forest = RandomForestClassifier(n_estimators=100, random_state=42)

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 import pandas as pd
 from joblib import load
 
@@ -10,6 +10,7 @@ CORS(app)  # Enable CORS on the Flask app
 model_filename = 'backend/outcome_prediction_with_team_model.joblib'
 random_forest_model = load(model_filename)
 
+
 # Load the LabelEncoders
 label_encoders = {}
 for column in ['Team', 'Ejected']:
@@ -18,6 +19,7 @@ for column in ['Team', 'Ejected']:
 
 # Outcome's LabelEncoder for decoding the prediction
 outcome_label_encoder = load('backend/Outcome_label_encoder.joblib')
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -30,7 +32,15 @@ def predict():
     # Preprocess the new data
     X_new['Task Completed'] = pd.to_numeric(X_new['Task Completed'], errors='coerce')
     X_new['Imposter Kills'] = pd.to_numeric(X_new['Imposter Kills'], errors='coerce')
-    X_new['Game Length'] = X_new['Game Length'].apply(lambda x: int(x.split('m')[0]) * 60 + int(x.split(' ')[1].split('s')[0]) if isinstance(x, str) and 'm' in x else None)
+    
+    # Process 'Game Length' into total seconds
+    def process_game_length(gl):
+        if isinstance(gl, str) and 'm' in gl:
+            minutes, seconds = gl.replace('s', '').split('m')
+            return int(minutes) * 60 + int(seconds)
+        return None
+    
+    X_new['Game Length'] = X_new['Game Length'].apply(process_game_length)
     X_new.replace({'No': 0, 'Yes': 1}, inplace=True)
 
     # Encode categorical variables using the loaded LabelEncoders
@@ -48,6 +58,7 @@ def predict():
 
     # Return the prediction
     return jsonify({'predicted_outcome': predicted_outcome[0]})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
