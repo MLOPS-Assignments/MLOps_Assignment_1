@@ -20,7 +20,7 @@ def test_predict_endpoint(client):
            "Ejected": "Yes"
     }
 
-    response = client.post('/predict', data=json.dumps(test_data), 
+    response = client.post('/predict', data=json.dumps(test_data),
                            content_type='application/json')
 
     assert response.status_code == 200
