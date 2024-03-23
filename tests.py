@@ -13,9 +13,9 @@ def client():
 def test_predict_endpoint(client):
     test_data = {
            "Team": "Crewmate",
-           "Task Completed": 2,
-           "Murdered": 1,
-           "Imposter Kills": 2,
+           "Task Completed": 5,
+           "Murdered": 7,
+           "Imposter Kills": 8,
            "Game Length": "12m 02s",
            "Ejected": "Yes"
     }
