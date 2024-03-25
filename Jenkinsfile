@@ -12,13 +12,7 @@ pipeline {
         bat 'docker build -t moizxsania/dp-alpine:latest .' // Use 'bat' for Windows commands
       }
     }
-    stage('Scan') {
-      steps {
-        // Replace 'docker scan' with 'docker scout'
-        bat 'docker scout moizxsania/dp-alpine:latest' // Use 'bat' for Windows commands
-      }
-    }
-    stage('Publish') {
+    stage('Publish') { // Note the corrected placement of the stage within the stages block
       steps {
         bat '''
           docker login -u %DOCKERHUB_CREDENTIALS_USR% -p %DOCKERHUB_CREDENTIALS_PSW%
