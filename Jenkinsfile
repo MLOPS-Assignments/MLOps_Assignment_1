@@ -14,7 +14,8 @@ pipeline {
     }
     stage('Scan') {
       steps {
-        bat 'docker scan moizxsania/dp-alpine:latest' // Use 'bat' for Windows commands
+        // Replace 'docker scan' with 'docker scout'
+        bat 'docker scout moizxsania/dp-alpine:latest' // Use 'bat' for Windows commands
       }
     }
     stage('Publish') {
