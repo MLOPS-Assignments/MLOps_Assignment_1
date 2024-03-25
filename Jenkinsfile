@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'windows' } // Use 'windows' label for Windows agents
+  agent any
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
