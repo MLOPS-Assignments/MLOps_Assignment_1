@@ -4,24 +4,24 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('saniaarshad-dockerhub')
+    DOCKERHUB_CREDENTIALS = credentials('moizxsania-dockerhub')
   }
   stages {
     stage('Build') {
       steps {
-        bat 'docker build -t saniaarshad/dp-alpine:latest .' // Use 'bat' for Windows commands
+        bat 'docker build -t moizxsania/dp-alpine:latest .' // Use 'bat' for Windows commands
       }
     }
     stage('Scan') {
       steps {
-        bat 'docker scan saniaarshad/dp-alpine:latest' // Use 'bat' for Windows commands
+        bat 'docker scan moizxsania/dp-alpine:latest' // Use 'bat' for Windows commands
       }
     }
     stage('Publish') {
       steps {
         bat '''
           docker login -u %DOCKERHUB_CREDENTIALS_USR% -p %DOCKERHUB_CREDENTIALS_PSW%
-          docker push saniaarshad/dp-alpine:latest
+          docker push moizxsania/dp-alpine:latest
           docker logout
         '''
       }
